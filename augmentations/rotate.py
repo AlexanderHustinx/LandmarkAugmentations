@@ -43,8 +43,6 @@ def rotate(img_tensor, landmarks, angle, fill=0., expand=True,
 # Function to rotate the landmarks
 # note: When expand is False the landmarks coordinates may end up outside the image boundaries ...
 def rotate_landmarks(landmarks, angle, old_size, new_size, expand=False):
-    print(f"{old_size=}")
-    print(f"{new_size=}")
     if expand is not True:
         assert (old_size == new_size), f"Expand == False, so expected old_size to be equal to new_size " \
                                        f"({old_size=},{new_size=} given)."
@@ -54,8 +52,9 @@ def rotate_landmarks(landmarks, angle, old_size, new_size, expand=False):
         [+np.cos(np.radians(angle)), +np.sin(np.radians(angle))],
         [-np.sin(np.radians(angle)), +np.cos(np.radians(angle))]
     ])
-    
-    landmarks_p = landmarks.reshape(-1,2) - np.array([old_size[1] * 0.5, old_size[0] * 0.5])  # rotate around image center
+
+    # rotate around image center
+    landmarks_p = landmarks.reshape(-1,2) - np.array([old_size[1] * 0.5, old_size[0] * 0.5])
     landmarks_p = np.matmul(landmarks_p, transformation_matrix) + np.array([old_size[1] * 0.5, old_size[0] * 0.5])
 
     if expand is True:
